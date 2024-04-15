@@ -1,0 +1,47 @@
+def generate_key_table(key):
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    key_table = ""
+    key = key.upper().replace("J", "I")  # Converting to uppercase and replacing J with I
+    for char in key:
+        if char not in key_table:
+            key_table += char
+    for char in alphabet:
+        if char not in key_table:
+            key_table += char
+    return key_table
+
+def find_position(key_table, char):
+    index = key_table.index(char)
+    row = index // 5
+    col = index % 5
+    return row, col
+
+def playfair_cipher(text, key, mode):
+    key_table = generate_key_table(key)
+    text = text.upper().replace("J", "I").replace(" ", "")  # Converting to uppercase, replacing J with I, and removing spaces
+    if len(text) % 2 != 0:
+        text += "X"  # Adding an extra character if the length is odd
+    result = ""
+    shift = 1 if mode == "encrypt" else -1
+    for i in range(0, len(text), 2):
+        digraph = text[i:i+2]
+        row1, col1 = find_position(key_table, digraph[0])
+        row2, col2 = find_position(key_table, digraph[1])
+        if row1 == row2:
+            result += key_table[row1 * 5 + (col1 + shift) % 5]
+            result += key_table[row2 * 5 + (col2 + shift) % 5]
+        elif col1 == col2:
+            result += key_table[((row1 + shift) % 5) * 5 + col1]
+            result += key_table[((row2 + shift) % 5) * 5 + col2]
+        else:
+            result += key_table[row1 * 5 + col2]
+            result += key_table[row2 * 5 + col1]
+    return result
+
+# Encryption and Decryption are now unified under the playfair_cipher function
+plaintext = "HELLO WORLD"
+key = "KEYWORD"
+encrypted_text = playfair_cipher(plaintext, key, "encrypt")
+print("Encrypted text:", encrypted_text)
+decrypted_text = playfair_cipher(encrypted_text, key, "decrypt")
+print("Decrypted text:", decrypted_text)
