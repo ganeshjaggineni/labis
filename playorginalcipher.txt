@@ -1,0 +1,74 @@
+def generate_key_table(key):
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    key_table = ""
+    key = key.upper().replace("J", "I")  # Converting to uppercase and replacing J with I
+    for char in key:
+        if char not in key_table:
+            key_table += char
+    for char in alphabet:
+        if char not in key_table:
+            key_table += char
+    return key_table
+
+def find_position(key_table, char):
+    index = key_table.index(char)
+    row = index // 5
+    col = index % 5
+    return row, col
+
+def encrypt(plaintext, key):
+    key_table = generate_key_table(key)
+    plaintext = plaintext.upper().replace("J", "I")  # Converting to uppercase and replacing J with I
+    plaintext = plaintext.replace(" ", "")  # Removing spaces
+    plaintext = plaintext.replace("J", "I")  # Replacing J with I
+    if len(plaintext) % 2 != 0:
+        plaintext += "X"  # Adding an extra character if the length is odd
+    encrypted_text = ""
+    for i in range(0, len(plaintext), 2):
+        digraph = plaintext[i:i+2]
+        row1, col1 = find_position(key_table, digraph[0])
+        row2, col2 = find_position(key_table, digraph[1])
+        if row1 == row2:
+            encrypted_text += key_table[row1 * 5 + (col1 + 1) % 5]
+            encrypted_text += key_table[row2 * 5 + (col2 + 1) % 5]
+        elif col1 == col2:
+            encrypted_text += key_table[((row1 + 1) % 5) * 5 + col1]
+            encrypted_text += key_table[((row2 + 1) % 5) * 5 + col2]
+        else:
+            encrypted_text += key_table[row1 * 5 + col2]
+            encrypted_text += key_table[row2 * 5 + col1]
+    return encrypted_text
+
+def find_position(key_table, char):
+    index = key_table.index(char)
+    row = index // 5
+    col = index % 5
+    return row, col
+
+def decrypt(encrypted_text, key):
+    key_table = generate_key_table(key)
+    decrypted_text = ""
+    for i in range(0, len(encrypted_text), 2):
+        digraph = encrypted_text[i:i+2]
+        row1, col1 = find_position(key_table, digraph[0])
+        row2, col2 = find_position(key_table, digraph[1])
+        if row1 == row2:
+            decrypted_text += key_table[row1 * 5 + (col1 - 1) % 5]
+            decrypted_text += key_table[row2 * 5 + (col2 - 1) % 5]
+        elif col1 == col2:
+            decrypted_text += key_table[((row1 - 1) % 5) * 5 + col1]
+            decrypted_text += key_table[((row2 - 1) % 5) * 5 + col2]
+        else:
+            decrypted_text += key_table[row1 * 5 + col2]
+            decrypted_text += key_table[row2 * 5 + col1]
+    return decrypted_text
+
+# Example usage
+plaintext = "HELLO WORLD"
+key = "KEYWORD"
+encrypted_text = encrypt(plaintext, key)
+print("Encrypted text:", encrypted_text)
+decrypted_text = decrypt(encrypted_text, key)
+print("Decrypted text:", decrypted_text)
+
+
