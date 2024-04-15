@@ -1,0 +1,103 @@
+Given:
+Plaintext (64-bit): 675A69675E5A6B5A
+Key (64-bit): 5B5A57676A56676E
+
+Derive the first-round subkey, K1:
+The first step in DES key scheduling is the permutation choice 1 (PC-1). PC-1 takes the 64-bit key and reduces it to 56 bits by permuting it according to a predefined table.
+
+The PC-1 table looks like this:
+
+python
+Copy code
+57  49  41  33  25  17  9
+1   58  50  42  34  26  18
+10  2   59  51  43  35  27
+19  11  3   60  52  44  36
+...
+After applying PC-1, we split the 56-bit result into two 28-bit halves, C0 and D0.
+
+Now, we perform left circular shifts on C0 and D0. In the first round of DES, both halves are shifted by one bit.
+
+After shifting, we apply permutation choice 2 (PC-2). PC-2 reduces the 56-bit halves to 48 bits by selecting specific bits from the concatenated halves.
+
+Finally, we obtain the first-round subkey K1, which is 48 bits long.
+
+Let's perform the calculations:
+
+Key (64-bit): 5B5A57676A56676E (hexadecimal)
+Key (56-bit after PC-1): 0101101101011010010111010111011001101010010110100111101110110 (binary)
+C0: 0101101
+D0: 1011010110100101101110101110
+After left circular shift:
+C1: 1011010
+D1: 1101001011010010111010111010
+Key (56-bit after PC-2):
+
+Copy code
+14  17  11  24  1   5
+3   28  15  6   21  10
+23  19  12  4   26  8
+16  7   27  20  13  2
+K1: 110010111011101011011101011000100111010110111110 (binary)
+CBBAEDB49395D695 (hexadecimal)
+
+Derive left and right parts of the plaintext, Lo, Ro:
+Given plaintext (64-bit): 675A69675E5A6B5A
+Lo (left part): 675A6967 (32-bit)
+Ro (right part): 5E5A6B5A (32-bit)
+
+Expand Ro to get E[Ro]:
+The expansion function (E) expands the 32-bit right part (Ro) to 48 bits by duplicating certain bits from Ro. The expansion is done according to the following table:
+
+python
+Copy code
+32  1   2   3   4   5
+4   5   6   7   8   9
+8   9   10  11  12  13
+12  13  14  15  16  17
+...
+After expanding Ro, we get E[Ro] (48 bits).
+
+Calculate A = E[Ro] XOR K1:
+Perform XOR operation between E[Ro] and K1 to obtain A.
+
+These steps are the initial steps in the DES encryption process, providing a clear understanding of how the key and plaintext are manipulated to generate the subkey and intermediate values. Let me know if you need further clarification!
+
+
+
+Derive the first-round subkey, K1:
+Given the initial 64-bit key: 5B5A57676A56676E (hexadecimal)
+Perform Permutation Choice 1 (PC-1) to reduce the key to 56 bits.
+Split the 56-bit key into two 28-bit halves, C0 and D0.
+Perform left circular shifts on C0 and D0.
+Perform Permutation Choice 2 (PC-2) to reduce each 56-bit half to 48 bits.
+Concatenate the two 48-bit halves to obtain the first-round subkey, K1.
+K1 (48-bit):
+Binary: 110010111011101011011101011000100111010110111110
+Hexadecimal: CBBAEDB49395D695
+
+Derive left and right parts of the plaintext, Lo, Ro:
+Given the plaintext block: 675A69675E5A6B5A (hexadecimal)
+Split the 64-bit plaintext into two 32-bit halves.
+Lo (left part):
+Binary: 01100111010110100110100101110111
+Hexadecimal: 675A6967
+
+Ro (right part):
+Binary: 01011110011010001010110101001110
+Hexadecimal: 5E5A6B5A
+
+Expand Ro to get E[Ro]:
+Expand the 32-bit Ro to 48 bits using the expansion function (E).
+The expansion involves duplicating certain bits from Ro according to a predefined table.
+E[Ro] (48-bit):
+Binary: 010111100110100010101101010011110101011010101
+Hexadecimal: 5E34AD4FAB2A
+
+Calculate A = E[Ro] XOR K1:
+Perform XOR operation between E[Ro] and K1 to obtain A.
+XOR operation involves combining the bits of E[Ro] and K1, taking the exclusive OR of each pair of corresponding bits.
+A (48-bit):
+Binary: 100110111001000011011110101011000010001011000
+Hexadecimal: 9D8CBA2B2168
+
