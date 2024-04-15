@@ -1,0 +1,30 @@
+i) To find the value of d:
+Given p = 17, q = 13, n = 221, and e = 35,
+φ(n) = (p-1)(q-1) = 16 × 12 = 192
+Using the Extended Euclidean Algorithm:
+35d ≡ 1 (mod 192)
+35d = 1 + 192k
+Solving for d, we find d = 11.
+
+ii) To encrypt the message m = 78:
+Using the public key (e, n):
+C ≡ m^e (mod n)
+Substituting the given values:
+C ≡ 78^35 (mod 221)
+C ≡ 97 (mod 221)
+
+iii) To decrypt the ciphertext C = 65:
+Using the private key (d, n):
+m ≡ C^d (mod n)
+Substituting the given values:
+m ≡ 65^11 (mod 221)
+m ≡ 78 (mod 221)
+
+iv) To verify the digital signature:
+Given:
+- m = 93
+- e = 35
+- s = 188
+- n = 221
+93^35 ≡ 188 (mod 221)
+After computation, if the result is 188, then the digital signature is valid, indicating that the message likely came from Alice. If not, the integrity of the message is compromised.
